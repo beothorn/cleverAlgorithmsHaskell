@@ -1,0 +1,13 @@
+name: cleverAlgorithms
+
+dependencies:
+  - base
+  - random
+  - mtl
+
+executables:
+  solveAll:
+    main: Main.hs
+    source-dirs:
+      - app
+      - src
