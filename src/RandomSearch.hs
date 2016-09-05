@@ -1,7 +1,5 @@
 module RandomSearch where
-import Control.Monad.State (State, evalState, get, put)
-import System.Random (StdGen, RandomGen, mkStdGen, newStdGen, randomR, random)
-import Control.Applicative ((<$>))
+import System.Random
 
 data Candidate = Candidate {vector::[Double], cost::Double} 
 

@@ -16,7 +16,6 @@ executable solveAll
   build-depends:
       base
     , random
-    , mtl
   other-modules:
       Lib
       RandomSearch
