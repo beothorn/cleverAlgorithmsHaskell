@@ -7,8 +7,22 @@ import System.Random
 import Stochastic.Candidate
 
 randomSearch :: Double -> Double -> Int -> Int -> ([Double] -> Double) -> StdGen -> [Double]
-randomSearch min max searchSpace iterationCount costFunction rndgen = searchBest iterationCount newRandomCandidate min max searchSpace costFunction rndgen where
-  newRandomCandidate = randomCandidate min max searchSpace costFunction rndgen
+randomSearch 
+  min 
+  max 
+  searchSpace 
+  iterationCount 
+  costFunction 
+  rndgen = 
+    searchBest 
+      iterationCount 
+      newRandomCandidate 
+      min 
+      max 
+      searchSpace 
+      costFunction 
+      rndgen where
+        newRandomCandidate = randomCandidate min max searchSpace costFunction rndgen
 
 searchBest :: Int -> Candidate -> Double -> Double -> Int -> ([Double] -> Double) -> StdGen -> [Double]
 searchBest 0 (Candidate {solution = s}) _ _ _ _ _ = s
