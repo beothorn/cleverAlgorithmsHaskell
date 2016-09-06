@@ -12,8 +12,8 @@ instance Eq Candidate where
 createCandidate ::  [Double] -> ([Double] -> Double) -> Candidate
 createCandidate vector costFunction = Candidate {solution=vector, cost= costFunction vector}
 
-randomCandidate :: Double -> Double -> ([Double] -> Double) -> StdGen -> Candidate
-randomCandidate min max costFunction g = createCandidate  (take 2 $ values min max g ) costFunction
+randomCandidate :: Double -> Double -> Int -> ([Double] -> Double) -> StdGen -> Candidate
+randomCandidate min max searchSpace costFunction g = createCandidate  (take searchSpace $ values min max g ) costFunction
 
 values :: Double -> Double -> StdGen -> [Double]
 values min max rndgen = map fst $ scanl (\(r, gen) _ -> random gen) (randomR (min, max) rndgen) $ repeat () 
