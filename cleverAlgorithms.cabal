@@ -18,5 +18,6 @@ executable solveAll
     , random
   other-modules:
       Lib
-      RandomSearch
+      Stochastic.Candidate
+      Stochastic.RandomSearch
   default-language: Haskell2010

@@ -1,6 +1,6 @@
 module Main where
 
-import RandomSearch
+import Stochastic.RandomSearch
 
 main :: IO ()
 main = result
