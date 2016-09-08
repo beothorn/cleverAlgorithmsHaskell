@@ -23,14 +23,14 @@ main = do
       initialFactor = 0.05
       smallStepFactor = 1.3
       largeStepFactor = 3.0
-      stepFactor = 10
+      tryBigStepEveryNTime = 10
       noChangeMax = 30
     in print (adaptativeRandomSearch 
                 interval
                 searchSpace 
                 maxIterations 
                 initialFactor 
-                stepFactor 
+                tryBigStepEveryNTime 
                 smallStepFactor 
                 largeStepFactor 
                 noChangeMax 

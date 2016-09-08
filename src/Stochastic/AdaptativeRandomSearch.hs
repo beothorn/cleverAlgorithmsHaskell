@@ -13,7 +13,7 @@ adaptativeRandomSearch
   searchSpace 
   iterationCount 
   initialFactor 
-  stepFactor
+  tryBigStepEveryNTime
   smallStepFactor 
   largeStepFactor 
   noChangeMax
@@ -21,15 +21,36 @@ adaptativeRandomSearch
   rndgen = [0]
 
 searchBest :: Int -> Candidate -> Interval -> Int -> Double -> Double -> Double -> Double -> Double -> ([Double] -> Double) -> StdGen -> [Double]
+searchBest 0 (Candidate {solution = s}) _ _ _ _ _ _ _ _ _ = [0]
 searchBest
   iterationCount 
   best
-  interval
+  interval@(Interval max min)
   searchSpace 
   initialFactor 
-  stepFactor
+  tryBigStepEveryNTime
   smallStepFactor 
   largeStepFactor 
   noChangeMax
   costFunction 
-  rndgen = [0]
+  rndgen = 
+    searchBest
+      (iterationCount - 1) 
+      newRandomCandidate
+      interval
+      searchSpace 
+      initialFactor 
+      tryBigStepEveryNTime
+      smallStepFactor 
+      largeStepFactor 
+      noChangeMax
+      costFunction 
+      rndgen
+    where
+      newRandomCandidate = randomCandidate interval searchSpace costFunction rndgen
+      stepSize = (max - min) * initialFactor
+
+variableStepSize :: Int -> Int -> Double -> Double -> Double -> Double 
+variableStepSize iterationCount tryBigStepEveryNTime stepSize smallStepFactor largeStepFactor
+  | iterationCount `mod` tryBigStepEveryNTime == 0 && iterationCount > 0 = stepSize * largeStepFactor
+  | otherwise = stepSize * smallStepFactor
