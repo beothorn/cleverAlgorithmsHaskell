@@ -2,6 +2,7 @@ module Main where
 
 import Stochastic.RandomSearch
 import Stochastic.AdaptativeRandomSearch
+import Stochastic.Interval
 import System.Random
 
 objectiveFunction :: [Double] -> Double
@@ -11,14 +12,12 @@ main :: IO ()
 main = do
   print "Random search" 
   g <- newStdGen
-  let min = (-5)
-      max = 5
+  let interval = Interval (-5) 5
       searchSpace = 2
       maxIterations = 100
-    in print (randomSearch min max searchSpace maxIterations objectiveFunction g)
+    in print (randomSearch interval searchSpace maxIterations objectiveFunction g)
   print "Adaptative random search"
-  let min = (-5)
-      max = 5
+  let interval = Interval (-5) 5
       searchSpace = 2
       maxIterations = 1000
       initialFactor = 0.05
@@ -27,8 +26,7 @@ main = do
       stepFactor = 10
       noChangeMax = 30
     in print (adaptativeRandomSearch 
-                min 
-                max 
+                interval
                 searchSpace 
                 maxIterations 
                 initialFactor 

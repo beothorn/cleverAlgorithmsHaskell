@@ -20,5 +20,6 @@ executable solveAll
       Lib
       Stochastic.AdaptativeRandomSearch
       Stochastic.Candidate
+      Stochastic.Interval
       Stochastic.RandomSearch
   default-language: Haskell2010

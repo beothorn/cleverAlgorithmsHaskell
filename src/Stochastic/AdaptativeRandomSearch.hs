@@ -4,11 +4,12 @@ module Stochastic.AdaptativeRandomSearch
 )
 where
 import System.Random
+import Stochastic.Candidate
+import Stochastic.Interval
 
-adaptativeRandomSearch :: Double -> Double -> Int -> Int -> Double -> Double -> Double -> Double -> Double -> ([Double] -> Double) -> StdGen -> [Double]
+adaptativeRandomSearch :: Interval -> Int -> Int -> Double -> Double -> Double -> Double -> Double -> ([Double] -> Double) -> StdGen -> [Double]
 adaptativeRandomSearch 
-  min 
-  max 
+  interval
   searchSpace 
   iterationCount 
   initialFactor 
@@ -19,13 +20,12 @@ adaptativeRandomSearch
   costFunction 
   rndgen = [0]
 
-searchBest :: Int -> Candidate -> Double -> Double -> Int -> Int -> Double -> Double -> Double -> Double -> Double -> ([Double] -> Double) -> StdGen -> [Double]
+searchBest :: Int -> Candidate -> Interval -> Int -> Double -> Double -> Double -> Double -> Double -> ([Double] -> Double) -> StdGen -> [Double]
+searchBest
   iterationCount 
   best
-  min 
-  max 
+  interval
   searchSpace 
-  iterationCount 
   initialFactor 
   stepFactor
   smallStepFactor 

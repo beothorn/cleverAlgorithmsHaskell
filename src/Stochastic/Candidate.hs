@@ -1,5 +1,6 @@
 module Stochastic.Candidate where
 import System.Random
+import Stochastic.Interval
 
 data Candidate = Candidate {solution::[Double], cost::Double} 
 
@@ -12,8 +13,8 @@ instance Eq Candidate where
 createCandidate ::  [Double] -> ([Double] -> Double) -> Candidate
 createCandidate vector costFunction = Candidate {solution=vector, cost= costFunction vector}
 
-randomCandidate :: Double -> Double -> Int -> ([Double] -> Double) -> StdGen -> Candidate
-randomCandidate min max searchSpace costFunction g = createCandidate  (take searchSpace $ values min max g ) costFunction
+randomCandidate :: Interval -> Int -> ([Double] -> Double) -> StdGen -> Candidate
+randomCandidate interval searchSpace costFunction g = createCandidate  (take searchSpace $ values interval g ) costFunction
 
-values :: Double -> Double -> StdGen -> [Double]
-values min max rndgen = map fst $ scanl (\(r, gen) _ -> random gen) (randomR (min, max) rndgen) $ repeat () 
+values :: Interval -> StdGen -> [Double]
+values (Interval min max) rndgen = map fst $ scanl (\(r, gen) _ -> random gen) (randomR (min, max) rndgen) $ repeat () 
