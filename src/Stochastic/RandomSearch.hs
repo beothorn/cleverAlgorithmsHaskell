@@ -7,34 +7,23 @@ import System.Random
 import Stochastic.Candidate
 import Stochastic.Interval
 
-randomSearch :: Interval -> Int -> Int -> ([Double] -> Double) -> StdGen -> [Double]
-randomSearch 
-  interval
-  searchSpace 
-  iterationCount 
-  costFunction 
-  rndgen = 
-    searchBest 
-      iterationCount 
-      newRandomCandidate 
-      interval
-      searchSpace 
-      costFunction 
-      rndgen 
-    where
-      newRandomCandidate = randomCandidate interval searchSpace costFunction rndgen
+randomSearch :: Int -> Problem -> [Double]
+randomSearch iterationCount problem = 
+  searchBest 
+    iterationCount 
+    newRandomCandidate 
+    problem 
+  where
+    newRandomCandidate = randomCandidate problem
 
-searchBest :: Int -> Candidate -> Interval -> Int -> ([Double] -> Double) -> StdGen -> [Double]
-searchBest 0 (Candidate {solution = s}) _ _ _ _ = s
-searchBest iterationCount best interval searchSpace costFunction rndgen = 
+searchBest :: Int -> Candidate -> Problem -> [Double]
+searchBest 0 (Candidate {solution = s}) _ = s
+searchBest iterationCount best problem = 
   searchBest 
     nextIteration
     tryToFindABestFit 
-    interval
-    searchSpace 
-    costFunction 
-    rndgen 
+    problem 
   where
     nextIteration = (iterationCount - 1)
-    newRandomCandidate = randomCandidate interval searchSpace costFunction rndgen
+    newRandomCandidate = randomCandidate problem
     tryToFindABestFit = (minimum [best, newRandomCandidate])

@@ -1,56 +1,71 @@
+{-# LANGUAGE NamedFieldPuns #-}
+
 module Stochastic.AdaptativeRandomSearch
 (
-  adaptativeRandomSearch
+  adaptativeRandomSearch,
+  takeStep
 )
 where
 import System.Random
 import Stochastic.Candidate
 import Stochastic.Interval
 
-adaptativeRandomSearch :: Interval -> Int -> Int -> Double -> Double -> Double -> Double -> Double -> ([Double] -> Double) -> StdGen -> [Double]
-adaptativeRandomSearch 
-  interval
-  searchSpace 
-  iterationCount 
-  initialFactor 
-  tryBigStepEveryNTime
-  smallStepFactor 
-  largeStepFactor 
-  noChangeMax
-  costFunction 
-  rndgen = [0]
+data ARSParameters = ARSParams {
+  initialFactor :: Double,
+  smallStepFactor :: Double,
+  largeStepFactor :: Double,
+  tryBigStepEveryNTime :: Int,
+  maxTriesWithoutImprovement :: Int
+} 
 
-searchBest :: Int -> Candidate -> Interval -> Int -> Double -> Double -> Double -> Double -> Double -> ([Double] -> Double) -> StdGen -> [Double]
-searchBest 0 (Candidate {solution = s}) _ _ _ _ _ _ _ _ _ = [0]
+adaptativeRandomSearch :: Int -> Problem -> ARSParameters -> [Double]
+adaptativeRandomSearch
+  iterationCount 
+  problem@(Problem {interval=(Interval min max)})
+  arsParams@(ARSParams {initialFactor}) = 
+    searchBest
+      iterationCount
+      iterationsSinceLastImprovement
+      newRandomCandidate
+      stepSize
+      problem
+      arsParams
+    where
+      newRandomCandidate = randomCandidate problem
+      stepSize = (max - min) * initialFactor
+      iterationsSinceLastImprovement = 0
+
+searchBest :: Int -> Int -> Candidate -> Double -> Problem -> ARSParameters -> [Double]
+searchBest 0 _ (Candidate {solution = s}) _ _ _ = [0]
 searchBest
   iterationCount 
+  iterationsSinceLastImprovement
   best
-  interval@(Interval max min)
-  searchSpace 
-  initialFactor 
-  tryBigStepEveryNTime
-  smallStepFactor 
-  largeStepFactor 
-  noChangeMax
-  costFunction 
-  rndgen = 
+  stepSize
+  problem@(Problem {interval=(Interval min max)})
+  arsParams@(ARSParams {tryBigStepEveryNTime, smallStepFactor, largeStepFactor}) = 
     searchBest
-      (iterationCount - 1) 
+      nextIteration 
+      0
       newRandomCandidate
-      interval
-      searchSpace 
-      initialFactor 
-      tryBigStepEveryNTime
-      smallStepFactor 
-      largeStepFactor 
-      noChangeMax
-      costFunction 
-      rndgen
+      stepSize
+      problem
+      arsParams
     where
-      newRandomCandidate = randomCandidate interval searchSpace costFunction rndgen
-      stepSize = (max - min) * initialFactor
+      nextIteration = iterationCount - 1
+      iterationCountSinceLastImprovement =  iterationsSinceLastImprovement - 1 
+      newRandomCandidate = randomCandidate problem
+      newVariableStepSize = variableStepSize iterationCount tryBigStepEveryNTime stepSize smallStepFactor largeStepFactor  
 
 variableStepSize :: Int -> Int -> Double -> Double -> Double -> Double 
 variableStepSize iterationCount tryBigStepEveryNTime stepSize smallStepFactor largeStepFactor
   | iterationCount `mod` tryBigStepEveryNTime == 0 && iterationCount > 0 = stepSize * largeStepFactor
   | otherwise = stepSize * smallStepFactor
+
+--takeStep (Problem (Interval (-5) 5) 2 (\ x -> sum x) (mkStdGen 42)) (Candidate [0,0] 0) 1
+takeStep :: Problem -> Candidate -> Double -> Candidate
+takeStep
+  problem
+  current
+  stepSize = randomCandidate problem
+

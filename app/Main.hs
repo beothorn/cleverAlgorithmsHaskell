@@ -1,5 +1,6 @@
 module Main where
 
+import Stochastic.Candidate
 import Stochastic.RandomSearch
 import Stochastic.AdaptativeRandomSearch
 import Stochastic.Interval
@@ -15,26 +16,27 @@ main = do
   let interval = Interval (-5) 5
       searchSpace = 2
       maxIterations = 100
-    in print (randomSearch interval searchSpace maxIterations objectiveFunction g)
+      problem = Problem interval searchSpace objectiveFunction g
+    in print $ randomSearch maxIterations problem
   print "Adaptative random search"
-  let interval = Interval (-5) 5
-      searchSpace = 2
-      maxIterations = 1000
-      initialFactor = 0.05
-      smallStepFactor = 1.3
-      largeStepFactor = 3.0
-      tryBigStepEveryNTime = 10
-      noChangeMax = 30
-    in print (adaptativeRandomSearch 
-                interval
-                searchSpace 
-                maxIterations 
-                initialFactor 
-                tryBigStepEveryNTime 
-                smallStepFactor 
-                largeStepFactor 
-                noChangeMax 
-                objectiveFunction 
-                g
-             )
+--   let interval = Interval (-5) 5
+--       searchSpace = 2
+--       maxIterations = 1000
+--       initialFactor = 0.05
+--       smallStepFactor = 1.3
+--       largeStepFactor = 3.0
+--       tryBigStepEveryNTime = 10
+--       noChangeMax = 30
+--     in print (adaptativeRandomSearch 
+--                 interval
+--                 searchSpace 
+--                 maxIterations 
+--                 initialFactor 
+--                 tryBigStepEveryNTime 
+--                 smallStepFactor 
+--                 largeStepFactor 
+--                 noChangeMax 
+--                 objectiveFunction 
+--                 g
+--              )
     
