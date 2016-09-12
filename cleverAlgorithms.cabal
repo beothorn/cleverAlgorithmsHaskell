@@ -8,7 +8,7 @@ license-file:        LICENSE
 build-type:          Simple
 cabal-version:       >= 1.10
 
-executable solveAll
+executable cleverAlgos
   main-is: Main.hs
   hs-source-dirs:
       app
@@ -16,6 +16,25 @@ executable solveAll
   build-depends:
       base
     , random
+  other-modules:
+      Lib
+      Stochastic.AdaptativeRandomSearch
+      Stochastic.Candidate
+      Stochastic.Interval
+      Stochastic.RandomSearch
+  default-language: Haskell2010
+
+Test-Suite testCleverAlgos
+  main-is: Spec.hs
+  type:    exitcode-stdio-1.0
+  hs-source-dirs:
+      app
+    , src
+    , test
+  build-depends:
+      base
+    , random
+    , HUnit
   other-modules:
       Lib
       Stochastic.AdaptativeRandomSearch

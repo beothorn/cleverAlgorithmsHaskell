@@ -1,10 +1,6 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
 module Stochastic.AdaptativeRandomSearch
-(
-  adaptativeRandomSearch,
-  takeStep
-)
 where
 import System.Random
 import Stochastic.Candidate
@@ -62,10 +58,16 @@ variableStepSize iterationCount tryBigStepEveryNTime stepSize smallStepFactor la
   | iterationCount `mod` tryBigStepEveryNTime == 0 && iterationCount > 0 = stepSize * largeStepFactor
   | otherwise = stepSize * smallStepFactor
 
---takeStep (Problem (Interval (-5) 5) 2 (\ x -> sum x) (mkStdGen 42)) (Candidate [0,0] 0) 1
+--takeStep (Problem (Interval (-5) 5) 2 (\ x -> sum x) (mkStdGen 42)) (Candidate [1,2] 999) 1
 takeStep :: Problem -> Candidate -> Double -> Candidate
 takeStep
-  problem
-  current
-  stepSize = randomCandidate problem
-
+  (Problem {interval=(Interval min max), costFunction, randomGenerator})
+  (Candidate {solution})
+  stepSize = candidateAfterStep
+  where
+    lowerBound = (\n -> Prelude.max min (n - stepSize))
+    upperBound = (\n -> Prelude.min max (n + stepSize)) 
+    rangeFromStepSize = (\n -> (lowerBound n, upperBound n))
+    newPosition = (\n -> fst $ randomR (rangeFromStepSize n) randomGenerator)
+    newPossibleSolution = map newPosition solution
+    candidateAfterStep = createCandidate newPossibleSolution costFunction 
