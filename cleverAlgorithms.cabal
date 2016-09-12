@@ -17,7 +17,6 @@ executable cleverAlgos
       base
     , random
   other-modules:
-      Lib
       Stochastic.AdaptativeRandomSearch
       Stochastic.Candidate
       Stochastic.Interval
@@ -36,9 +35,5 @@ Test-Suite testCleverAlgos
     , random
     , HUnit
   other-modules:
-      Lib
-      Stochastic.AdaptativeRandomSearch
-      Stochastic.Candidate
-      Stochastic.Interval
-      Stochastic.RandomSearch
+      Stochastic.AdaptativeRandomSearchTest
   default-language: Haskell2010
